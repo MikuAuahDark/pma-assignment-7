@@ -38,7 +38,7 @@ public class Helper {
         // Retrofit
         retrofit = new Retrofit.Builder()
             .client(client)
-            .baseUrl("http://api.themoviedb.org/3/")
+            .baseUrl("https://api.themoviedb.org/3/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     }
