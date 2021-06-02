@@ -14,3 +14,5 @@
 .cxx
 local.properties
 app/src/main/assets/apikey.txt
+app/src/main/assets/apikey-decrypted.txt
+app/src/main/java/id/co/npad93/pm/t7/ApiTokenDecrypter.java
