@@ -9,9 +9,13 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     MovieFragment movieFragment;
     FavoriteFragment favoriteFragment;
+
+    HashMap<Integer, String> menuTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +26,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         // Initialize fragment
         movieFragment = new MovieFragment();
         favoriteFragment = new FavoriteFragment();
+
+        // Initialize menu title
+        menuTitle = new HashMap<Integer, String>();
+        menuTitle.put(R.id.menuItem, "Now Playing");
+        menuTitle.put(R.id.menuItem2, "Upcoming");
+        menuTitle.put(R.id.menuItem3, "Popular");
+        menuTitle.put(R.id.menuItem4, "Favourite");
 
         // Initialize view
         setContentView(R.layout.activity_main);
@@ -38,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             replaceFragment(favoriteFragment);
         } else {
             replaceFragment(movieFragment);
+        }
+
+        String title = menuTitle.get(id);
+        if (title != null) {
+            getSupportActionBar().setTitle(title);
         }
 
         return true;

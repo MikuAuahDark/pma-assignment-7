@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 public class MovieFragment extends Fragment {
     public MovieFragment() {
@@ -22,6 +23,9 @@ public class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie, container, false);
+        View root = inflater.inflate(R.layout.fragment_movie, container, false);
+        root.<SearchView>findViewById(R.id.searchView).setIconifiedByDefault(false);
+
+        return root;
     }
 }
