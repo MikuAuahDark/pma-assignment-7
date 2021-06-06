@@ -1,6 +1,10 @@
 package id.co.npad93.pm.t7;
 
+import android.content.Context;
 import android.content.res.AssetManager;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,5 +57,9 @@ public class Helper {
         }
 
         return os.toByteArray();
+    }
+
+    public static void loadImage(Context context, String url, ImageView imageView) {
+        Glide.with(context).load(url).into(imageView);
     }
 }
