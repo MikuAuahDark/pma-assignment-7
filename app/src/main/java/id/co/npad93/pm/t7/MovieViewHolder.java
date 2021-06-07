@@ -23,19 +23,19 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
     @Override
     public void onClick(View v) {
         Intent i = new Intent(context, DetailActivity.class);
-        i.putExtra("movie", movie);
+        i.putExtra("id", movie.id);
         context.startActivity(i);
     }
 
-    public void bind(Movie data) {
+    public void bind(BasicMovie data) {
         movie = data;
         title.setText(data.title);
         originalTitle.setText(data.originalTitle);
-        // TODO load poster
+        Helper.loadImage(context, "w500", data.posterPath, poster);
     }
 
     private TextView title, originalTitle;
     private ImageView poster;
     private Context context;
-    private Movie movie;
+    private BasicMovie movie;
 }

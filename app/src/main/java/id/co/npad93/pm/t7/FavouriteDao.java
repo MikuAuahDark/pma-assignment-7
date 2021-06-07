@@ -9,13 +9,13 @@ import java.util.List;
 
 @Dao
 public interface FavouriteDao {
-    @Query("select * from favourites")
-    Movie[] getAll();
-    @Query("SELECT * FROM favourites WHERE id IN (:ids)")
-    List<Movie> getByIds(int... ids);
+    @Query("select * from movie")
+    BasicMovie[] getAll();
+    @Query("SELECT * FROM movie WHERE id IN (:ids)")
+    List<BasicMovie> getByIds(int... ids);
 
     @Insert
-    void insert(Movie... movies);
+    void insert(BasicMovie... movies);
     @Delete
-    void delete(Movie movie);
+    void delete(BasicMovie movie);
 }

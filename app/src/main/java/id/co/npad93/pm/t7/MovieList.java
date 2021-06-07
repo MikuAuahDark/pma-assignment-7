@@ -11,12 +11,12 @@ public class MovieList {
         return totalPages;
     }
 
-    public Movie[] getResults() {
+    public BasicMovie[] getResults() {
         return results;
     }
 
     private int page;
     @SerializedName("total_pages")
     private int totalPages;
-    private Movie[] results;
+    private BasicMovie[] results;
 }

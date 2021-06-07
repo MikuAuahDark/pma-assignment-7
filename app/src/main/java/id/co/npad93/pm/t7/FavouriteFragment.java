@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FavoriteFragment extends Fragment {
-    public FavoriteFragment() {
+public class FavouriteFragment extends Fragment {
+    public FavouriteFragment() {
         // Required empty public constructor
     }
 

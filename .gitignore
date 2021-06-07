@@ -12,6 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+apikey-decrypted.txt
 local.properties
 app/src/main/assets/apikey.txt
 app/src/main/assets/apikey-decrypted.txt

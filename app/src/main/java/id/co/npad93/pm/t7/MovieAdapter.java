@@ -1,7 +1,6 @@
 package id.co.npad93.pm.t7;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +32,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         return dataset != null ? dataset.size() : 0;
     }
 
-    public ArrayList<Movie> getDataset() {
+    public ArrayList<BasicMovie> getDataset() {
         return dataset;
     }
 
-    public void setDataset(ArrayList<Movie> data) {
+    public void setDataset(ArrayList<BasicMovie> data) {
         dataset = data;
     }
 
-    private ArrayList<Movie> dataset;
+    private ArrayList<BasicMovie> dataset;
 }

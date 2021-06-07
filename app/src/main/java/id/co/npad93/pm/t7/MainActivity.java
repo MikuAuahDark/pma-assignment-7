@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     MovieFragment movieFragment;
-    FavoriteFragment favoriteFragment;
+    FavouriteFragment favoriteFragment;
 
     HashMap<Integer, String> menuTitle;
 
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         // Initialize fragment
         movieFragment = new MovieFragment();
-        favoriteFragment = new FavoriteFragment();
+        favoriteFragment = new FavouriteFragment();
 
         // Initialize menu title
         menuTitle = new HashMap<Integer, String>();
@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        movieFragment.setDataKind(0);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
@@ -49,6 +55,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             replaceFragment(favoriteFragment);
         } else {
             replaceFragment(movieFragment);
+
+            if (id == R.id.menuItem) {
+                movieFragment.setDataKind(0);
+            } else if (id == R.id.menuItem2) {
+                movieFragment.setDataKind(1);
+            } else if (id == R.id.menuItem3) {
+                movieFragment.setDataKind(2);
+            }
         }
 
         String title = menuTitle.get(id);
