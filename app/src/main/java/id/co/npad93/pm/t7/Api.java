@@ -44,11 +44,6 @@ public class Api {
             .baseUrl("https://api.themoviedb.org/3/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-
-        basicMovieIndex = new ArrayList<ListContainer>();
-        basicMovieIndex.add(new ListContainer());
-        basicMovieIndex.add(new ListContainer());
-        basicMovieIndex.add(new ListContainer());
     }
 
     public static Retrofit getRetrofit() {
@@ -79,96 +74,6 @@ public class Api {
         Glide.with(context).load("https://image.tmdb.org/t/p/" + size + path).into(imageView);
     }
 
-    public static void switchData(MovieFragment f, boolean reload, int kind) {
-        if (kind < 0 || kind > 2) {
-            throw new IllegalArgumentException("kind out of range");
-        }
-
-        ListContainer listContainer = basicMovieIndex.get(kind);
-
-        if (reload || listContainer.basicMovieArrayList == null) {
-            listContainer.page = 0;
-            requestNextPage(f, kind);
-        } else {
-            f.loadRecyclerViewDataset(listContainer.basicMovieArrayList);
-        }
-    }
-
-    public static void requestNextPage(MovieFragment f, int kind) {
-        TheMovieDBApi api = getApi();
-        ListContainer listContainer = basicMovieIndex.get(kind);
-        Call<MovieList> call;
-
-        if (listContainer.page > 0 && listContainer.page >= listContainer.totalPages) {
-            // Stop requesting new pages.
-            return;
-        }
-
-        switch (kind) {
-            case 0: {
-                call = api.getNowPlayingMovies(listContainer.page + 1);
-                break;
-            }
-            case 1: {
-                call = api.getUpcomingMovies(listContainer.page + 1);
-                break;
-            }
-            case 2: {
-                call = api.getPopularMovies(listContainer.page + 1);
-                break;
-            }
-            default: {
-                assert false;
-                throw new IllegalArgumentException("kind out of range");
-            }
-        }
-
-        call.enqueue(new Callback<MovieList>() {
-            @Override
-            public void onResponse(Call<MovieList> call, retrofit2.Response<MovieList> response) {
-                if (response.isSuccessful()) {
-                    ArrayList<BasicMovie> basicMovieData = listContainer.basicMovieArrayList;
-                    MovieList result = response.body();
-                    boolean newPage = listContainer.page == 0;
-                    int count = 0;
-
-                    if (newPage) {
-                        basicMovieData = new ArrayList<BasicMovie>();
-                        listContainer.page = 1;
-                        listContainer.totalPages = result.getTotalPages();
-                        listContainer.basicMovieArrayList = basicMovieData;
-                    } else {
-                        listContainer.page++;
-                        count = basicMovieData.size();
-                    }
-
-                    basicMovieData.addAll(Arrays.asList(result.getResults()));
-
-                    if (newPage) {
-                        f.loadRecyclerViewDataset(basicMovieData);
-                    } else {
-                        f.loadRecyclerViewDataset(count, result.getResults().length);
-                    }
-
-                    f.markUnrefreshed();
-                } else {
-                    Toast.makeText(f.getContext(), "HTTP Error: " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
-                Toast.makeText(f.getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
     private static Retrofit retrofit;
     private static TheMovieDBApi api;
-    private static ArrayList<ListContainer> basicMovieIndex;
-
-    static class ListContainer {
-        ArrayList<BasicMovie> basicMovieArrayList;
-        int page, totalPages;
-    }
 }

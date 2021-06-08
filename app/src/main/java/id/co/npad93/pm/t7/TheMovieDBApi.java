@@ -21,6 +21,12 @@ public interface TheMovieDBApi {
         @Query("page") int page
     );
 
+    @GET("search/movie")
+    Call<MovieList> searchMovie(
+        @Query("query") String query,
+        @Query("page") int page
+    );
+
     @GET("movie/{id}?append_to_response=credits")
     Call<MovieDetail> getMovie(
         @Path("id") int id
