@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Initialize assets
-        Helper.init(getAssets());
+        Api.init(getAssets());
 
         // Initialize fragment
         movieFragment = new MovieFragment();

@@ -30,7 +30,7 @@ public class ApiToken {
             Object decrypt = constructor.newInstance("Hello", "apikey.txt", header);
 
             // Decrypt
-            byte[] data = Helper.readAllBytes(apikey);
+            byte[] data = Api.readAllBytes(apikey);
             Method decryptInPlace = c.getMethod("decryptInPlace", byte[].class);
             decryptInPlace.invoke(decrypt, data);
 
@@ -47,7 +47,7 @@ public class ApiToken {
             // Load apikey-decrypted.txt
             try {
                 InputStream input = am.open("apikey-decrypted.txt");
-                token = new String(Helper.readAllBytes(input), StandardCharsets.UTF_8);
+                token = new String(Api.readAllBytes(input), StandardCharsets.UTF_8);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
                 token = "";

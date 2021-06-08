@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Helper {
+public class Api {
     public static void init(AssetManager am) {
         // Decrypt token
         ApiToken.initialize(am);
@@ -45,14 +45,22 @@ public class Helper {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-        basicMovieIndex = new ArrayList<ArrayList<BasicMovie>>();
-        basicMovieIndex.add(null);
-        basicMovieIndex.add(null);
-        basicMovieIndex.add(null);
+        basicMovieIndex = new ArrayList<ListContainer>();
+        basicMovieIndex.add(new ListContainer());
+        basicMovieIndex.add(new ListContainer());
+        basicMovieIndex.add(new ListContainer());
     }
 
     public static Retrofit getRetrofit() {
         return retrofit;
+    }
+
+    public static TheMovieDBApi getApi() {
+        if (api == null) {
+            api = getRetrofit().create(TheMovieDBApi.class);
+        }
+
+        return api;
     }
 
     public static byte[] readAllBytes(InputStream input) throws IOException {
@@ -76,31 +84,37 @@ public class Helper {
             throw new IllegalArgumentException("kind out of range");
         }
 
-        ArrayList<BasicMovie> dataset = basicMovieIndex.get(kind);
+        ListContainer listContainer = basicMovieIndex.get(kind);
 
-        if (reload || dataset == null) {
-            basicMovieIndex.set(kind, null);
-            requestPage(f, 1, kind);
+        if (reload || listContainer.basicMovieArrayList == null) {
+            listContainer.page = 0;
+            requestNextPage(f, kind);
         } else {
-            f.loadRecyclerViewDataset(dataset);
+            f.loadRecyclerViewDataset(listContainer.basicMovieArrayList);
         }
     }
 
-    public static void requestPage(MovieFragment f, int page, int kind) {
-        TheMovieDBApi api = getRetrofit().create(TheMovieDBApi.class);
+    public static void requestNextPage(MovieFragment f, int kind) {
+        TheMovieDBApi api = getApi();
+        ListContainer listContainer = basicMovieIndex.get(kind);
         Call<MovieList> call;
+
+        if (listContainer.page > 0 && listContainer.page >= listContainer.totalPages) {
+            // Stop requesting new pages.
+            return;
+        }
 
         switch (kind) {
             case 0: {
-                call = api.getNowPlayingMovies(page);
+                call = api.getNowPlayingMovies(listContainer.page + 1);
                 break;
             }
             case 1: {
-                call = api.getUpcomingMovies(page);
+                call = api.getUpcomingMovies(listContainer.page + 1);
                 break;
             }
             case 2: {
-                call = api.getPopularMovies(page);
+                call = api.getPopularMovies(listContainer.page + 1);
                 break;
             }
             default: {
@@ -113,15 +127,30 @@ public class Helper {
             @Override
             public void onResponse(Call<MovieList> call, retrofit2.Response<MovieList> response) {
                 if (response.isSuccessful()) {
-                    ArrayList<BasicMovie> basicMovieData = basicMovieIndex.get(kind);
+                    ArrayList<BasicMovie> basicMovieData = listContainer.basicMovieArrayList;
+                    MovieList result = response.body();
+                    boolean newPage = listContainer.page == 0;
+                    int count = 0;
 
-                    if (basicMovieData == null) {
+                    if (newPage) {
                         basicMovieData = new ArrayList<BasicMovie>();
-                        basicMovieIndex.set(kind, basicMovieData);
+                        listContainer.page = 1;
+                        listContainer.totalPages = result.getTotalPages();
+                        listContainer.basicMovieArrayList = basicMovieData;
+                    } else {
+                        listContainer.page++;
+                        count = basicMovieData.size();
                     }
 
-                    basicMovieData.addAll(Arrays.asList(response.body().getResults()));
-                    f.loadRecyclerViewDataset(basicMovieData);
+                    basicMovieData.addAll(Arrays.asList(result.getResults()));
+
+                    if (newPage) {
+                        f.loadRecyclerViewDataset(basicMovieData);
+                    } else {
+                        f.loadRecyclerViewDataset(count, result.getResults().length);
+                    }
+
+                    f.markUnrefreshed();
                 } else {
                     Toast.makeText(f.getContext(), "HTTP Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
@@ -135,5 +164,11 @@ public class Helper {
     }
 
     private static Retrofit retrofit;
-    private static ArrayList<ArrayList<BasicMovie>> basicMovieIndex;
+    private static TheMovieDBApi api;
+    private static ArrayList<ListContainer> basicMovieIndex;
+
+    static class ListContainer {
+        ArrayList<BasicMovie> basicMovieArrayList;
+        int page, totalPages;
+    }
 }

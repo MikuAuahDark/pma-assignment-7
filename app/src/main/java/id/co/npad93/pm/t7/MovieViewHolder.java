@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
     public MovieViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -31,7 +30,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
         movie = data;
         title.setText(data.title);
         originalTitle.setText(data.originalTitle);
-        Helper.loadImage(context, "w500", data.posterPath, poster);
+        Api.loadImage(context, "w500", data.posterPath, poster);
     }
 
     private TextView title, originalTitle;

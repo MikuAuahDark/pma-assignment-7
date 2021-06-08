@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    MovieAdapter(ArrayList<BasicMovie> dataset) {
+        super();
+        this.dataset = dataset;
+    }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,14 +35,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public int getItemCount() {
         return dataset != null ? dataset.size() : 0;
-    }
-
-    public ArrayList<BasicMovie> getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(ArrayList<BasicMovie> data) {
-        dataset = data;
     }
 
     private ArrayList<BasicMovie> dataset;
