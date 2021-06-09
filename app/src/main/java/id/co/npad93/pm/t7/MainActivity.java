@@ -1,11 +1,11 @@
 package id.co.npad93.pm.t7;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize assets
-        Api.init(getAssets());
+        // Initialize
+        Api.initialize(getAssets());
+        FavouriteAdapter.initialize(this);
 
         // Initialize fragment
         movieFragment = new MovieFragment();

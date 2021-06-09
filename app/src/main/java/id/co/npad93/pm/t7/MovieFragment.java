@@ -2,6 +2,13 @@ package id.co.npad93.pm.t7;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,13 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
             }
         };
-        searchDelayer = new Handler();
+        searchDelayer = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -204,9 +204,16 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         }
 
+        if (currentCall != null) {
+            currentCall.cancel();
+        }
+
+        currentCall = call;
         call.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, retrofit2.Response<MovieList> response) {
+                currentCall = null;
+
                 if (response.isSuccessful()) {
                     ArrayList<BasicMovie> basicMovieData = listContainer.basicMovieArrayList;
                     MovieList result = response.body();
@@ -244,6 +251,9 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onFailure(Call<MovieList> call, Throwable t) {
+                currentCall = null;
+                fetching = false;
+                swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -260,6 +270,7 @@ public class MovieFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ArrayList<ListContainer> basicMovieIndex;
     private Runnable search, searchWrapper;
     private Handler searchDelayer;
+    private Call<MovieList> currentCall;
 
     static class ListContainer {
         ArrayList<BasicMovie> basicMovieArrayList;

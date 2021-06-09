@@ -3,27 +3,22 @@ package id.co.npad93.pm.t7;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Api {
-    public static void init(AssetManager am) {
+    public static void initialize(AssetManager am) {
         // Decrypt token
         ApiToken.initialize(am);
 
