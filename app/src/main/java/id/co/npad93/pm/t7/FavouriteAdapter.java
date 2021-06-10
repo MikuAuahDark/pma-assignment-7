@@ -19,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public static void initialize(Context context) {
-        instance = new FavouriteAdapter(context);
+        if (instance == null) {
+            instance = new FavouriteAdapter(context);
+        }
     }
 
     public static FavouriteAdapter getInstance() {
@@ -176,6 +178,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<MovieViewHolder> {
                 basicMovie.setPosterPath(query.getString(4));
 
                 favourites.add(basicMovie);
+                favouritesLookup.add(id);
                 query.moveToNext();
             }
 

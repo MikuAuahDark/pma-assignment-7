@@ -14,6 +14,6 @@
         android:title="Popular" />
     <item
         android:id="@+id/menuItem4"
-        android:icon="@drawable/ic_baseline_star_border_purple500_24"
+        android:icon="@drawable/ic_baseline_favorite_24"
         android:title="Favourite" />
 </menu>

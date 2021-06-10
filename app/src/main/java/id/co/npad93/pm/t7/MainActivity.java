@@ -12,11 +12,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    MovieFragment movieFragment;
-    FavouriteFragment favoriteFragment;
-
-    HashMap<Integer, String> menuTitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onStart() {
         super.onStart();
-        movieFragment.setDataKind(0);
+
+        if (!firstStart) {
+            movieFragment.setDataKind(0);
+            firstStart = true;
+        }
     }
 
     @Override
@@ -77,4 +76,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void replaceFragment(Fragment f) {
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, f).commit();
     }
+
+    private MovieFragment movieFragment;
+    private FavouriteFragment favoriteFragment;
+
+    private HashMap<Integer, String> menuTitle;
+    private boolean firstStart;
 }
